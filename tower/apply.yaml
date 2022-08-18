@@ -1,0 +1,100 @@
+---
+# TAGS - snmpd, splunk, container_host, webapps, node_exporter
+- name: Deploy new server(s) - run roles against piholes
+  hosts: piholes
+  gather_facts: false
+  remote_user: ansible
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+  roles:
+    - role: pihole_add
+      tags: 
+        - always
+
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+
+    - name: Create in memory inventory
+      add_host:
+        name: "{{ item }}.{{ dns_suffix_list[0] }}"
+        groups: temp_group
+      loop: "{{ vm_name_list}}"
+      tags: 
+        - always
+
+  roles:
+    - role: terraform_apply
+      tags:
+        - always
+    - role: add_hosts_inv
+      tags:
+        - always
+
+- name: Run roles against new server(s)
+  hosts: temp_group
+  remote_user: ansible
+  become: true
+  become_method: sudo
+  
+  vars:
+    - rolepath: "../../homelab/roles/"
+
+  roles:
+    - role: "{{rolepath}}rhel_sub_add"
+      when: ansible_facts['distribution'] == 'RedHat'
+      tags:
+        - always
+    - role: "{{rolepath}}add_eingram_user"
+      tags:
+        - always
+    - role: "{{rolepath}}chrony"
+      tags:
+        - always
+    - role: "{{rolepath}}install_packages"
+      tags:
+        - always
+    - role: "{{rolepath}}container_host"
+      tags:
+        - container_host
+        - never
+    - role: "{{rolepath}}webapps"
+      tags:
+        - webapps
+        - never
+    - role: "{{rolepath}}splunk_uf"
+      tags:
+        - splunk_uf
+        - never
+    - role: "{{rolepath}}snmpd"
+      tags:
+        - snmpd
+        - never
+    - role: "{{rolepath}}node_exporter"
+      tags:
+        - node_exporter
+        - never
+
+- name: Add target to prometheus server
+  hosts: grafana
+  gather_facts: false
+  become_user: poduser
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+
+  vars:
+    - rolepath: "../../homelab/roles/"
+
+  roles:
+    - role: "{{rolepath}}prometheus_target_update_nix"
+      tags:
+        - node_exporter
+        - never

@@ -1,0 +1,20 @@
+---
+- name: Combine ip_address_list and vm_name_list list
+  set_fact:
+    dns_entry: "{{ip_address_list | zip(vm_name_list) | map('join', ' ') | list }}"
+
+- name: Add DNS records to Pihole (multiple hosts)
+  lineinfile:
+    backup: yes
+    path: /etc/pihole/custom.list
+    line: "{{ item }}.{{dns_suffix_list[0]}}"
+    state: present
+  loop: "{{dns_entry}}"
+  register: dns_changed
+
+- name: Restart pihole-FTL
+  service:
+    name: pihole-FTL
+    state: restarted
+  when: dns_changed.changed
+

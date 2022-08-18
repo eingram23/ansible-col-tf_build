@@ -1,0 +1,11 @@
+---
+- name: Remove host from Ansible inventory
+  lineinfile:
+    backup: yes
+    path: ~/code/Ansible/hosts
+    line: "{{ item }}.{{dns_suffix_list[0]}}"
+    state: absent
+  loop: "{{ vm_name_list }}"
+
+- meta: refresh_inventory
+    

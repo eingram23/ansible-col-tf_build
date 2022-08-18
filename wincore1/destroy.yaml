@@ -1,0 +1,27 @@
+---
+- name: Destroy Terraform
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+  
+    - import_role:
+        name: terraform_destroy
+
+- name: Remove DNS entries from Pihole
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+  
+  tasks:
+
+    - import_role:
+        name: pihole_remove
+
+ 

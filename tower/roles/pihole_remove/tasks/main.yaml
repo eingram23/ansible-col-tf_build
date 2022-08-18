@@ -1,0 +1,15 @@
+---
+- name: Remove DNS record
+  lineinfile:
+    backup: yes
+    path: /etc/pihole/custom.list
+    regexp: "{{ item }}.{{dns_suffix_list[0]}}"
+    state: absent
+  loop: "{{vm_name_list}}"
+  register: dnsremoved
+
+- name: Restart pihole-FTL
+  service:
+    name: pihole-FTL
+    state: restarted
+  when: dnsremoved.changed

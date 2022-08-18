@@ -1,0 +1,31 @@
+---
+- name: Run Terraform Destroy
+  terraform:
+    project_path: "{{proj_root}}{{proj_name}}"
+    state: absent
+    variables:
+      vsphere_template: "{{vsphere_template}}"
+      vsphere_datastore_list: "{{vsphere_datastore_list|to_json}}"
+      vsphere_network_list: "{{vsphere_network_list|to_json}}"
+      proj_name: "{{proj_name}}"
+      vm_name_list: "{{vm_name_list|to_json}}"
+      ip_address_list: "{{ip_address_list|to_json}}"
+      ip_gateway_list: "{{ip_gateway_list|to_json}}"
+      vm_ram: "{{vm_ram}}"
+      vm_cpu: "{{vm_cpu}}"
+      dns_suffix_list: "{{dns_suffix_list|to_json}}"
+
+- name: Create Terraform Deleted project folder
+  ansible.builtin.file:
+    path: "{{proj_root}}Deleted/{{proj_name}}"
+    state: directory
+
+- name: Copy Project folder into Deleted folder
+  ansible.builtin.copy: 
+    src: "{{proj_root}}{{proj_name}}/"
+    dest: "{{proj_root}}Deleted/{{proj_name}}/"
+
+- name: Delete Project folder
+  ansible.builtin.file:
+    path: "{{proj_root}}{{proj_name}}"
+    state: absent

@@ -1,0 +1,42 @@
+---
+
+tf_root: /Users/edwardingram/code/terraform/
+temp_path: "{{tf_root}}/Templates/vsphere_win_wg/"
+proj_root: "{{tf_root}}/Projects/"
+vm_folder_name: WindowsWG
+
+# Edit these settings
+
+proj_name: wincore1
+vsphere_template: TMP-Win2022Core_Packer_2022_08
+
+vm_ram: 1024
+vm_cpu: 1
+
+workgroup: WORKGROUP
+
+# All lists must have same # of elements
+
+vm_name_list: 
+  - wincore1
+  # - wintest2
+  # - test3
+ip_address_list:
+  - 10.10.0.92
+  # - 10.10.0.26
+  # - 10.10.0.27
+ip_gateway_list: 
+  - 10.10.0.1
+  # - 10.10.0.1
+  # - 10.10.0.1
+vsphere_datastore_list: 
+  - XN_iSCSI_SSD2
+  # - XN_iSCSI_SSD1
+  # - XN_iSCSI_SSD2
+vsphere_network_list: 
+  - Lab-LAN1
+  # - Lab-LAN1
+  # - Lab-LAN1
+dns_domain: local.lan
+
+

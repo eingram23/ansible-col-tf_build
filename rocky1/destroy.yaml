@@ -1,0 +1,51 @@
+---
+- name: Remove project servers and clean inventory/DNS
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+
+    - include_role:
+        name: inmem_inv    
+      
+- hosts: temp_group
+  become: true
+  become_method: sudo
+  ignore_unreachable: true
+
+  tasks:
+
+    - include_role:
+        name: rhel_sub_del
+      when: ansible_facts['distribution'] is defined and ansible_facts['distribution'] == 'RedHat'
+
+- name: Destroy Terraform
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+
+    - include_role:
+        name: "{{ item }}"
+      with_items:
+        - terraform_destroy
+        - remove_known_hosts
+ 
+- name: Run terraform destroy and clean inventory/dns
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+  
+  tasks:
+  
+    - include_role:
+        name: pihole_remove

@@ -1,0 +1,35 @@
+---
+- name: Check if project folder already exists
+  stat:
+    path: "{{proj_root}}{{proj_name}}"
+  register: project
+
+- when: not project.stat.exists
+  block:
+    - name: Create Terraform project folder
+      ansible.builtin.file:
+        path: "{{proj_root}}{{proj_name}}"
+        state: directory
+
+    - name: Copy template files into project folder
+      ansible.builtin.copy: 
+        src: "{{temp_path}}"
+        dest: "{{proj_root}}{{proj_name}}/"
+
+- name: Run Terraform Apply
+  terraform:
+    force_init: true
+    project_path: "{{proj_root}}{{proj_name}}"
+    state: present
+    variables:
+      vsphere_template: "{{vsphere_template}}"
+      vsphere_datastore_list: "{{vsphere_datastore_list|to_json}}"
+      vsphere_network_list: "{{vsphere_network_list|to_json}}"
+      proj_name: "{{proj_name}}"
+      vm_name_list: "{{vm_name_list|to_json}}"
+      ip_address_list: "{{ip_address_list|to_json}}"
+      ip_gateway_list: "{{ip_gateway_list|to_json}}"
+      vm_ram: "{{vm_ram}}"
+      vm_cpu: "{{vm_cpu}}"
+      dns_suffix_list: "{{dns_suffix_list|to_json}}"
+

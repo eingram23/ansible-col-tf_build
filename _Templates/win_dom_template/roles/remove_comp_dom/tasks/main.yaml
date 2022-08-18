@@ -1,0 +1,6 @@
+---
+- name: Use win_domain_computer module
+  win_domain_computer:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ vm_name_list }}" 

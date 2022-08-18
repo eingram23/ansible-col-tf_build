@@ -1,0 +1,33 @@
+---
+- name: Deploy Terraform plan
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - vars.yaml
+
+  tasks:
+
+    - import_role:
+        name: inmem_inv 
+      tags: 
+        - always
+    - import_role:
+        name: terraform_apply
+      tags:
+        - always
+
+- name: Create DNS entries in Pihole
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yaml
+  
+  tasks:
+
+    - include_role:
+        name: pihole_add
+      tags:
+        - always

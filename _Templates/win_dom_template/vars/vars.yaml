@@ -1,0 +1,40 @@
+---
+
+tf_root: /Users/edwardingram/code/Terraform/
+temp_path: "{{tf_root}}/Templates/vsphere_win_dom/"
+proj_root: "{{tf_root}}/Projects/"
+vm_folder_name: WindowsHL
+
+# Edit these settings
+
+proj_name: WinTestDomMulti
+vsphere_template: TMP-Win2022Core_Packer_2022_04
+
+vm_ram: 4096
+vm_cpu: 2
+
+domain: homelab.local
+
+# All lists must have same # of elements
+
+vm_name_list: 
+  - wintest
+  - wintest2
+  # - test3
+ip_address_list:
+  - 10.10.0.25
+  - 10.10.0.26
+  # - 10.10.0.27
+ip_gateway_list: 
+  - 10.10.0.1
+  - 10.10.0.1
+  # - 10.10.0.1
+vsphere_datastore_list: 
+  - XN_iSCSI_SSD2
+  - XN_iSCSI_SSD1
+  # - XN_iSCSI_SSD2
+vsphere_network_list: 
+  - Lab-LAN1
+  - Lab-LAN1
+  # - Lab-LAN1
+
