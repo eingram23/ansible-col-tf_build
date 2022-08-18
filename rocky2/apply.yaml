@@ -10,10 +10,10 @@
   
   tasks:
 
-    - name: Import pihile_add role
+    - name: Import pihole_add role
       import_role:
         name: pihole_add
-      tags: 
+      tags:
         - always
 
 - name: Run localhost roles
@@ -28,7 +28,7 @@
     - name: Import inmem_inv role
       import_role:
         name: inmem_inv 
-      tags: 
+      tags:
         - always
     - name: Import terraform_apply role
       import_role:

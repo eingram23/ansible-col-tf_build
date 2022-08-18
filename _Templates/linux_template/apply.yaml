@@ -10,7 +10,7 @@
   
   tasks:
 
-    - name: Import pihile_add role
+    - name: Import pihole_add role
       import_role:
         name: pihole_add
       tags: 
