@@ -7,7 +7,7 @@ vm_folder_name: Linux
 
 ### MAKE EDITS BELOW ###
 
-proj_name: podhost3
+proj_name: rocky2
 
 # Edit this to change distro
 # vsphere_template: TMP-RHEL85_Packer_2022_07
@@ -28,11 +28,11 @@ vsphere_network_list:
   # - Lab-LAN1
   # - Lab-LAN1
 vm_name_list: 
-  - podhost2
+  - rocky2
   # - test2
   # - test3
 ip_address_list:
-  - 10.10.0.25
+  - 10.10.0.94
   # - 10.10.0.26
   # - 10.10.0.27
 ip_gateway_list: 
