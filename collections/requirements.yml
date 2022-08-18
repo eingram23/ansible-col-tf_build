@@ -1,10 +1,8 @@
 ---
 collections:
-  - source: https://github.com/eingram23/ansible-col-homelab.git
+  - name: https://github.com/eingram23/ansible-col-homelab.git
     type: git
     version: main
-    name: eingram23.homelab
-  - source: https://github.com/eingram23/ansible-col-pihole.git
+  - name: https://github.com/eingram23/ansible-col-pihole.git
     type: git
     version: main
-    name: eingram23.pihole
