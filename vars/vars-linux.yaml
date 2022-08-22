@@ -1,0 +1,42 @@
+---
+tf_root: /terraform/
+temp_path: "../terraform/vsphere_linux/"
+proj_root: "{{tf_root}}/projects/"
+vm_folder_name: Linux
+
+### MAKE EDITS BELOW ###
+
+proj_name: podhost3
+
+# Edit this to change distro
+# vsphere_template: TMP-RHEL85_Packer_2022_07
+vsphere_template: TMP-Rocky85_Packer_2022_07
+# vsphere_template: TMP-CentOS_Packer_2022_04
+
+vm_ram: 1024
+vm_cpu: 1
+
+# All lists must have same # of elements
+
+vsphere_datastore_list: 
+  - XN_iSCSI_SSD1
+  # - XN_iSCSI_SSD2
+  # - XN_iSCSI_SSD2
+vsphere_network_list: 
+  - Lab-LAN1
+  # - Lab-LAN1
+  # - Lab-LAN1
+vm_name_list: 
+  - podhost2
+  # - test2
+  # - test3
+ip_address_list:
+  - 10.10.0.25
+  # - 10.10.0.26
+  # - 10.10.0.27
+ip_gateway_list: 
+  - 10.10.0.1
+  # - 10.10.0.1
+  # - 10.10.0.1
+dns_domain: local.lan
+

@@ -6,13 +6,13 @@
   become: true
   become_method: sudo
   vars_files:
-    - vars.yaml
+    - ../vars/vars-linux-rocky2.yaml
   
   tasks:
 
     - name: Import pihole-add role
       import_role:
-        name: eingram23.pihole.pihole-add
+        name: pihole-add
       tags: 
         - always
 
