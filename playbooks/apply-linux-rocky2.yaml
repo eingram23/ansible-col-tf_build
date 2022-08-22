@@ -9,7 +9,6 @@
     - ../vars/vars-linux-rocky2.yaml
 
   collections:
-    - eingram23.homelab
     - eingram23.pihole
   
   tasks:
@@ -26,6 +25,9 @@
   become: false
   vars_files:
     - vars.yaml
+
+  collections:
+    - eingram23.homelab
 
   tasks:
 
@@ -44,6 +46,9 @@
   hosts: temp_group
   become: true
   become_method: sudo
+
+  collections:
+    - eingram23.homelab
 
   roles:
     - role: rhel-sub-add
@@ -89,6 +94,9 @@
   vars_files:
     - vars.yaml
 
+  collections:
+    - eingram23.homelab
+     
   tasks:
   
     - name: Import prometheus-target-update-nix role
