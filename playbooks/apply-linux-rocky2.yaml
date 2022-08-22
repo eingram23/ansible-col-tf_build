@@ -38,7 +38,7 @@
         - always
     - name: Import terraform-apply role
       import_role:
-        name: terraform-apply
+        name: terraform-linux-apply
       tags:
         - always
 
