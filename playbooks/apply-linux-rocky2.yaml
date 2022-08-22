@@ -7,6 +7,10 @@
   become_method: sudo
   vars_files:
     - ../vars/vars-linux-rocky2.yaml
+
+  collections:
+    - eingram23.homelab
+    - eingram23.pihole
   
   tasks:
 
