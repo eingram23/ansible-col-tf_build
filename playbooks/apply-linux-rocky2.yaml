@@ -12,7 +12,7 @@
 
     - name: Import pihole-add role
       import_role:
-        name: eingram23.pihole.pihole-add
+        name: pihole-add
       tags: 
         - always
 
