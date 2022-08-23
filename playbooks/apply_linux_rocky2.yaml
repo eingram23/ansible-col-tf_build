@@ -6,13 +6,16 @@
   become: true
   become_method: sudo
   vars_files:
-    - vars.yaml
+    - ./vars/vars_linux_rocky2.yaml
+
+  collections:
+    - eingram23.pihole
   
   tasks:
 
-    - name: Import pihole-add role
+    - name: Import pihole_add role
       import_role:
-        name: pihole-add
+        name: pihole_add
       tags: 
         - always
 
@@ -21,18 +24,21 @@
   gather_facts: false
   become: false
   vars_files:
-    - vars.yaml
+    - ./vars/vars_linux_rocky2.yaml
+
+  collections:
+    - eingram23.homelab
 
   tasks:
 
-    - name: Import inmem-inv role
+    - name: Import inmem_inv role
       import_role:
-        name: inmem-inv 
+        name: eingram23.homelab.inmem_inv 
       tags: 
         - always
-    - name: Import terraform-apply role
+    - name: Import terraform_apply role
       import_role:
-        name: terraform-apply
+        name: terraform_linux_apply
       tags:
         - always
 
@@ -41,39 +47,42 @@
   become: true
   become_method: sudo
 
+  collections:
+    - eingram23.homelab
+
   roles:
-    - role: rhel-sub-add
+    - role: rhel_sub_add
       when: ansible_facts['distribution'] == 'RedHat'
       tags:
         - always
-    - role: add-eingram-user
+    - role: add_eingram_user
       tags:
         - always
     - role: chrony
       tags:
         - always
-    - role: install-core-pkgs
+    - role: install_core_pkgs
       tags:
         - always
-    - role: container-host
+    - role: container_host
       tags:
-        - container-host
+        - container_host
         - never
     - role: webapps
       tags:
         - webapps
         - never
-    - role: splunk-uf
+    - role: splunk_uf
       tags:
-        - splunk-uf
+        - splunk_uf
         - never
     - role: snmpd
       tags:
         - snmpd
         - never
-    - role: node-exporter
+    - role: node_exporter
       tags:
-        - node-exporter
+        - node_exporter
         - never
 
 - name: Add target to prometheus server
@@ -83,13 +92,16 @@
   become_user: poduser
   become_method: sudo
   vars_files:
-    - vars.yaml
+    - ./vars/vars_linux_rocky2.yaml
 
+  collections:
+    - eingram23.homelab
+     
   tasks:
   
-    - name: Import prometheus-target-update-nix role
+    - name: Import prometheus_target_update_nix role
       import_role:
-        name: prometheus-target-update-nix
+        name: prometheus_target_update_nix
       tags:
-        - node-exporter
+        - node_exporter
         - never

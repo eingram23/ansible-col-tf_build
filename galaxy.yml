@@ -5,7 +5,7 @@
 namespace: eingram23
 
 # The name of the collection. Has the same character restrictions as 'namespace'
-name: tf-build
+name: tf_build
 
 # The version of the collection. Must be compatible with semantic versioning
 version: 1.0.0
@@ -43,7 +43,7 @@ tags: []
 dependencies: {}
 
 # The URL of the originating SCM repository
-repository: https://github.com/eingram23/ansible-col-tf-build.git
+repository: https://github.com/eingram23/ansible-col-tf_build.git
 
 # The URL to any online docs
 documentation: http://docs.example.com
