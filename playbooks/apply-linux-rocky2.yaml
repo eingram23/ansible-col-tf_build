@@ -26,8 +26,8 @@
   vars_files:
     - ./vars/vars-linux-rocky2.yaml
 
-  # collections:
-  #   - eingram23.homelab
+  collections:
+    - eingram23.homelab
 
   # tasks:
 
@@ -42,12 +42,12 @@
   #     tags:
   #       - always
   roles:
-  - role: eingram23.homelab.inmem-inv
-    tags:
-      - always
-  - role: terraform-linux-apply
-    tags:
-      - always
+    - role: inmem-inv
+      tags:
+        - always
+    - role: terraform-linux-apply
+      tags:
+        - always
 
 - name: Run roles against new server(s)
   hosts: temp_group
