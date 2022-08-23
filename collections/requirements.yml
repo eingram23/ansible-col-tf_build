@@ -1,5 +1,6 @@
 ---
 collections:
+  - community.general.terraform
   - name: https://github.com/eingram23/ansible-col-homelab.git
     type: git
     version: main
