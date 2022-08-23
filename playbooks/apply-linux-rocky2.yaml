@@ -26,14 +26,14 @@
   vars_files:
     - vars.yaml
 
-  collections:
-    - eingram23.homelab
+  # collections:
+  #   - eingram23.homelab
 
   tasks:
 
     - name: Import inmem-inv role
       import_role:
-        name: inmem-inv 
+        name: eingram23.homelab.inmem-inv 
       tags: 
         - always
     - name: Import terraform-apply role
