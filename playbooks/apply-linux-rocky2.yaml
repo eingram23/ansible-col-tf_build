@@ -6,7 +6,7 @@
   become: true
   become_method: sudo
   vars_files:
-    - ../vars/vars-linux-rocky2.yaml
+    - ./vars/vars-linux-rocky2.yaml
 
   collections:
     - eingram23.pihole
@@ -24,7 +24,7 @@
   gather_facts: false
   become: false
   vars_files:
-    - vars.yaml
+    - ./vars/vars-linux-rocky2.yaml
 
   # collections:
   #   - eingram23.homelab
@@ -92,7 +92,7 @@
   become_user: poduser
   become_method: sudo
   vars_files:
-    - vars.yaml
+    - ./vars/vars-linux-rocky2.yaml
 
   collections:
     - eingram23.homelab
