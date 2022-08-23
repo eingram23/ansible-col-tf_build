@@ -28,7 +28,6 @@
 
   collections:
     - eingram23.homelab
-    - eingram23.tf-build
 
   tasks:
 
