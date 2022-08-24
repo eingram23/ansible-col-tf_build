@@ -36,10 +36,10 @@
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
       dns_domain: "{{dns_domain}}"
-  ignore_errors: yes
+#   ignore_errors: yes
 
-- name: Pause play
-  ansible.builtin.pause:
-    prompt: "Pause"
+# - name: Pause play
+#   ansible.builtin.pause:
+#     prompt: "Pause"
 
 
