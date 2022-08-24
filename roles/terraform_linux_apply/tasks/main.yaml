@@ -4,6 +4,10 @@
     path: "{{proj_root}}{{proj_name}}"
   register: project
 
+- name: Debug project folder
+  ansible.builtin.debug:
+    msg: "{{proj_root}}{{proj_name}}"
+    
 - when: not project.stat.exists
   block:
     - name: Create Terraform project folder
@@ -32,4 +36,5 @@
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
       dns_domain: "{{dns_domain}}"
+    parallelism: "1"
 
