@@ -23,7 +23,7 @@
 - name: Run Terraform Apply
   community.general.terraform:
     force_init: true
-    project_path: "{{proj_root}}{{proj_name}}"
+    project_path: "{{proj_root}}{{proj_name}}/"
     state: present
     variables:
       vsphere_template: "{{vsphere_template}}"
