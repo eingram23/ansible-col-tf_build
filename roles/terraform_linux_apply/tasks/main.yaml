@@ -7,7 +7,7 @@
 - name: Debug project folder
   ansible.builtin.debug:
     msg: "{{proj_root}}{{proj_name}}"
-    
+
 - when: not project.stat.exists
   block:
     - name: Create Terraform project folder
@@ -37,4 +37,10 @@
       vm_cpu: "{{vm_cpu}}"
       dns_domain: "{{dns_domain}}"
     parallelism: "1"
+  ignore_errors: yes
+
+- name: Pause play
+  ansible.builtin.pause:
+    prompt: "Pause"
+
 
