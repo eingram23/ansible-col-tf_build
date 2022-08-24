@@ -87,7 +87,7 @@ resource "vsphere_virtual_machine" "vm" {
     customize {
       linux_options {
         host_name = element(var.vm_name_list, count.index)
-        domain = var.dns_suffix_list[0]
+        domain = element(var.dns_suffix_list, count.index)
       }
 
       network_interface {

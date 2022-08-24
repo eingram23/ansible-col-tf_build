@@ -16,10 +16,6 @@ variable "vm_name_list" {
     type=list(any)
 }
 
-variable "dns_domain" {
-  default = "local.lan"
-}
-
 variable "vm_ram" {
 }
 
