@@ -21,7 +21,7 @@
         dest: "{{proj_root}}{{proj_name}}/"
 
 - name: Run Terraform Apply
-  community.general.terraform:
+  terraform:
     force_init: true
     project_path: "{{proj_root}}{{proj_name}}"
     state: present
