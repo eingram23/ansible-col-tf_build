@@ -24,7 +24,7 @@
   community.general.terraform:
     force_init: true
     # project_path: '{{proj_root}}{{proj_name}}/'
-    project_path: "/terraform/projects/rocky2/"
+    project_path: "/terraform/projects/rocky/"
     state: present
     variables:
       vsphere_template: "{{vsphere_template}}"
