@@ -102,3 +102,5 @@ variable "dns_suffix_list" {
   type    = list(any)
   default = ["local.lan"]
 }
+
+variable "workgroup" {}
