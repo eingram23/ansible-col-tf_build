@@ -103,4 +103,6 @@ variable "dns_suffix_list" {
   default = ["local.lan"]
 }
 
-variable "workgroup" {}
+variable "workgroup" {
+  default = ""
+}
