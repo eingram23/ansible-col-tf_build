@@ -87,7 +87,7 @@ resource "vsphere_virtual_machine" "vm" {
     customize {
       linux_options {
         host_name = element(var.vm_name_list, count.index)
-        domain = var.dns_domain
+        domain = var.dns_suffix_list[0]
       }
 
       network_interface {
@@ -98,7 +98,7 @@ resource "vsphere_virtual_machine" "vm" {
       ipv4_gateway = element(var.ip_gateway_list, count.index)
       # ipv4_gateway    = var.ip_gateway
       dns_server_list = var.dns_server_list
-      # dns_suffix_list = var.dns_suffix_list
+      dns_suffix_list = var.dns_suffix_list
     }
   }
 

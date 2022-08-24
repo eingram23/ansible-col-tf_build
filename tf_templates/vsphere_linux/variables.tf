@@ -102,7 +102,7 @@ variable "dns_server_list" {
   "192.168.1.251"]
 }
 
-# variable "dns_suffix_list" {
-#   type    = list(any)
-#   default = ["local.lan"]
-# }
+variable "dns_suffix_list" {
+  type    = list(any)
+  default = ["local.lan"]
+}

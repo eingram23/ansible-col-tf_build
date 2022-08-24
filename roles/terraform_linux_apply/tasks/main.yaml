@@ -32,4 +32,6 @@
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
       dns_domain: "{{dns_domain}}"
+      dns_suffix_list: "{{dns_domain}}"
+      workgroup: "{{workgroup}}|default([])"
 

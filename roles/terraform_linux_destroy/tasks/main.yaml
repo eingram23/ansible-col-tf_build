@@ -13,7 +13,8 @@
       ip_gateway_list: "{{ip_gateway_list|to_json}}"
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
-      dns_domain: "{{dns_domain}}"
+      dns_suffix_list: "{{dns_suffix_list|to_json}}"
+      workgroup: "{{workgroup}}|default([])"
 
 - name: Create Terraform Deleted project folder
   ansible.builtin.file:
