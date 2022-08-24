@@ -37,6 +37,8 @@
       vm_cpu: "{{vm_cpu}}"
       dns_domain: "{{dns_domain}}"
     parallelism: "1"
+  environment:
+    TF_LOG: TRACE
   # ignore_errors: yes
 
 # - name: Pause play
