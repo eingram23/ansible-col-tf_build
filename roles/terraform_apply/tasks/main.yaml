@@ -1,10 +1,11 @@
 ---
 - name: Check if project folder already exists
-  stat:
+  ansible.builtin.stat:
     path: "{{proj_root}}{{proj_name}}"
   register: project
 
-- when: not project.stat.exists
+- name: Check to see if project folder exists
+  when: not project.stat.exists
   block:
     - name: Create Terraform project folder
       ansible.builtin.file:
@@ -17,7 +18,7 @@
         dest: "{{proj_root}}{{proj_name}}/"
 
 - name: Run Terraform Apply
-  terraform:
+  community.general.terraform:
     force_init: true
     project_path: "{{proj_root}}{{proj_name}}"
     state: present
@@ -31,5 +32,5 @@
       ip_gateway_list: "{{ip_gateway_list|to_json}}"
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
-      dns_domain: "{{dns_domain}}"
-
+      dns_suffix_list: "{{dns_suffix_list|to_json}}"
+      workgroup: "{{workgroup|default([])}}"
