@@ -83,12 +83,15 @@ variable "ip_gateway_list" {
   default = []
 }
 
+variable "dns_suffix_list" {
+  type    = list(any)
+  default = ["local.lan"]
+}
+
 variable "dns_server_list" {
   type    = list(any)
   default = ["10.10.0.10"]
 }
-
-variable "dns_domain" {}
 
 variable "full_name" {
   type    = string

@@ -100,10 +100,10 @@ variable "dns_server_list" {
   default = ["10.10.0.10"]
 }
 
-# variable "dns_suffix_list" {
-#   type    = list(any)
-#   default = ["homelab.local"]
-# }
+variable "dns_suffix_list" {
+  type    = list(any)
+  default = ["homelab.local"]
+}
 
 variable "full_name" {
   type    = string
@@ -119,7 +119,5 @@ variable "time_zone" {
   type    = string
   default = "004"
 }
-
-variable "dns_domain" {}
 
 variable "vm_folder_name" {}
