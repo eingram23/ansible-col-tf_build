@@ -102,8 +102,8 @@ resource "vsphere_virtual_machine" "vm" {
       network_interface {
         ipv4_address = element(var.ip_address_list, count.index)
         ipv4_netmask = 24
-        dns_domain = var.dns_domain
-        # dns_domain = element(var.dns_suffix_list, count.index)
+        # dns_domain = var.dns_domain
+        dns_domain = element(var.dns_suffix_list, count.index)
       }
 
       ipv4_gateway    = element(var.ip_gateway_list, count.index)

@@ -101,7 +101,7 @@ resource "vsphere_virtual_machine" "vm" {
         organization_name     = var.organization_name
         auto_logon            = "true"
         time_zone             = var.time_zone
-        join_domain           = var.dns_domain
+        join_domain           = element(var.dns_suffix_list, count.index)
         domain_admin_user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
         domain_admin_password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
         # run_once_command_list = ""
