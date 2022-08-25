@@ -12,10 +12,10 @@
         path: "{{proj_root}}{{proj_name}}"
         state: directory
 
-- name: Copy template files into project folder
-  ansible.builtin.copy: 
-    src: "{{temp_path}}"
-    dest: "{{proj_root}}{{proj_name}}/"
+    - name: Copy template files into project folder
+      ansible.builtin.copy: 
+        src: "{{temp_path}}"
+        dest: "{{proj_root}}{{proj_name}}/"
 
 - name: Run Terraform Destroy
   community.general.terraform:
