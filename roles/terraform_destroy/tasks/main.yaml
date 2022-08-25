@@ -19,6 +19,7 @@
 
 - name: Run Terraform Destroy
   community.general.terraform:
+    force_init: true
     project_path: "{{proj_root}}{{proj_name}}"
     state: absent
     variables:
