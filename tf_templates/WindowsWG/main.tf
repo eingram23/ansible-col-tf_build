@@ -108,6 +108,7 @@ resource "vsphere_virtual_machine" "vm" {
 
       ipv4_gateway    = element(var.ip_gateway_list, count.index)
       dns_server_list = var.dns_server_list
+      dns_suffix_list = var.dns_suffix_list
     }
   }
 
@@ -154,7 +155,7 @@ resource "null_resource" "vm" {
   }
 
   provisioner "file" {
-    source      = "~/code/Terraform/files/powershell/"
+    source      = "${path.module}/scripts/"
     destination = "c:/temp"
   }
 
