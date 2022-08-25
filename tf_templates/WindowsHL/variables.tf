@@ -121,3 +121,5 @@ variable "time_zone" {
 }
 
 variable "vm_folder_name" {}
+
+variable "workgroup" {}
