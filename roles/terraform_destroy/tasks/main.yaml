@@ -14,7 +14,7 @@
       vm_ram: "{{vm_ram}}"
       vm_cpu: "{{vm_cpu}}"
       dns_suffix_list: "{{dns_suffix_list|to_json}}"
-      workgroup: "{{workgroup}}|default([])"
+      workgroup: "{{workgroup|default([])}}"
 
 - name: Create Terraform Deleted project folder
   ansible.builtin.file:
