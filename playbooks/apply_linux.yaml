@@ -1,4 +1,5 @@
 ---
+# Requires proj_name set at runtime
 # TAGS - snmpd, splunk, container_host, webapps, node_exporter
 - name: Deploy new server(s) - run roles against piholes
   hosts: piholes
@@ -6,7 +7,7 @@
   become: true
   become_method: sudo
   vars_files:
-    - ./vars/vars_linux_rocky2.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
 
   collections:
     - eingram23.pihole
@@ -24,21 +25,22 @@
   gather_facts: false
   become: false
   vars_files:
-    - ./vars/vars_linux_rocky2.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
 
   collections:
     - eingram23.homelab
+    - eingram23.tf_build
 
   tasks:
 
     - name: Import inmem_inv role
       import_role:
-        name: eingram23.homelab.inmem_inv 
+        name: inmem_inv
       tags: 
         - always
     - name: Import terraform_apply role
       import_role:
-        name: terraform_linux_apply
+        name: terraform_apply
       tags:
         - always
 
@@ -92,7 +94,7 @@
   become_user: poduser
   become_method: sudo
   vars_files:
-    - ./vars/vars_linux_rocky2.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
 
   collections:
     - eingram23.homelab

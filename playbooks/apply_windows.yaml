@@ -1,0 +1,41 @@
+---
+- name: Deploy Terraform plan
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - ./vars/vars_{{ proj_name }}.yaml
+
+  collections:
+    - eingram23.homelab
+    - eingram23.tf_build
+
+  tasks:
+
+    - import_role:
+        name: inmem_inv
+      tags: 
+        - always
+    - import_role:
+        name: terraform_apply
+      tags:
+        - always
+
+- name: Create DNS entries in Pihole
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  vars_files:
+    - ./vars/vars_{{ proj_name }}.yaml
+  
+  collections:
+    - eingram23.pihole
+
+  tasks:
+
+    - import_role:
+        name: pihole_add
+      tags:
+        - always
+      when: vm_folder_name == "WindowsWG"

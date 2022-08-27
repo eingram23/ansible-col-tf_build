@@ -4,21 +4,27 @@
   gather_facts: false
   become: false
   vars_files:
-    - vars.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
+
+  collections:
+    - eingram23.homelab
 
   tasks:
 
-    - include_role:
-        name: inmem_inv    
+    - import_role:
+        name: inmem_inv
       
 - hosts: temp_group
   become: true
   become_method: sudo
   ignore_unreachable: true
 
+  collections:
+    - eingram23.homelab
+
   tasks:
 
-    - include_role:
+    - import_role:
         name: rhel_sub_del
       when: ansible_facts['distribution'] is defined and ansible_facts['distribution'] == 'RedHat'
 
@@ -27,7 +33,11 @@
   gather_facts: false
   become: false
   vars_files:
-    - vars.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
+
+  collections:
+    - eingram23.homelab
+    - eingram23.tf_build
 
   tasks:
 
@@ -35,7 +45,6 @@
         name: "{{ item }}"
       with_items:
         - terraform_destroy
-        - remove_known_hosts
  
 - name: Run terraform destroy and clean inventory/dns
   hosts: piholes
@@ -43,9 +52,12 @@
   become: true
   become_method: sudo
   vars_files:
-    - vars.yaml
+    - ./vars/vars_{{ proj_name }}.yaml
   
+  collections:
+    - eingram23.pihole
+
   tasks:
   
-    - include_role:
+    - import_role:
         name: pihole_remove
