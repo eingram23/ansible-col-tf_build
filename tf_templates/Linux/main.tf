@@ -18,7 +18,6 @@ terraform {
 }
 
 provider "google" {
-  # credentials = file(var.credentials_file)
   credentials = "/terraform/creds.json"
   gcp_project = var.gcp_project
   gcp_region  = var.gcp_region
