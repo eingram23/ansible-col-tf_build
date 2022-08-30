@@ -1,5 +1,30 @@
 # Deploy RHEL8.5 VMs
 
+# terraform {
+#   required_providers {
+#     google = {
+#       source = "hashicorp/google"
+#       version = "3.9"
+#     }
+#   }
+# }
+
+terraform {
+ backend "gcs" {
+   bucket  = "yc-srv1-bucket-tfstate"
+   prefix  = "terraform/state"
+   credentials = "/terraform/creds.json"
+ }
+}
+
+provider "google" {
+  # credentials = file(var.credentials_file)
+  credentials = "/terraform/creds.json"
+  project = var.gcp_project
+  region  = var.gcp_region
+  zone    = var.gcp_zone
+}
+
 provider "vault" {
 }
 data "vault_generic_secret" "vsphere_username" {
