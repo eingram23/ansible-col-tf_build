@@ -20,9 +20,9 @@ terraform {
 provider "google" {
   # credentials = file(var.credentials_file)
   credentials = "/terraform/creds.json"
-  project = var.gcp_project
-  region  = var.gcp_region
-  zone    = var.gcp_zone
+  gcp_project = var.gcp_project
+  gcp_region  = var.gcp_region
+  gcp_zone    = var.gcp_zone
 }
 
 provider "vault" {

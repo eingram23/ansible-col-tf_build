@@ -30,9 +30,9 @@
     state: present
     variables:
       proj_name: "{{ proj_name }}"
-      gcp_project: "{{ gcp_project }}"
-      gcp_region: "{{ gcp_region }}"
-      gcp_zone: "{{ gcp_zone }}"
+      # gcp_project: "{{ gcp_project }}"
+      # gcp_region: "{{ gcp_region }}"
+      # gcp_zone: "{{ gcp_zone }}"
       vsphere_template: "{{vsphere_template}}"
       vsphere_datastore_list: "{{vsphere_datastore_list|to_json}}"
       vsphere_network_list: "{{vsphere_network_list|to_json}}"
