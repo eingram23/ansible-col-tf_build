@@ -1,7 +1,7 @@
 ---
-- name: Create project folder
+- name: Create project folder structure
   ansible.builtin.file:
-    path: "{{proj_root}}{{proj_name}}"
+    path: "{{proj_root}}{{proj_name}}/scripts"
     state: directory
     mode: 0755
 
@@ -13,6 +13,14 @@
   loop:
     - main
     - variables
+
+- name: Copy project files into project folder
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{proj_root}}{{proj_name}}/scripts/{{ item }}"
+  loop:
+    - config.ps1
+    - post_script.sh
 
 - name: Create backend tf
   ansible.builtin.template: 
