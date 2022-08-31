@@ -23,7 +23,7 @@
 - name: Create creds file
   ansible.builtin.template:
     src: creds.json.j2
-    dest: /terraform/creds.json
+    dest: "{{proj_root}}{{proj_name}}/creds.json"
     mode: 0400
 
 - name: Run Terraform Apply
