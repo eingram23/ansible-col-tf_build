@@ -9,13 +9,13 @@
 #   }
 # }
 
-terraform {
- backend "gcs" {
-   bucket  = "yc-srv1-bucket-tfstate"
-   prefix  = "terraform/state"
-   credentials = "/terraform/creds.json"
- }
-}
+# terraform {
+#  backend "gcs" {
+#    bucket  = "yc-srv1-bucket-tfstate"
+#    prefix  = "terraform/state"
+#    credentials = "/terraform/creds.json"
+#  }
+# }
 
 provider "google" {
   credentials = "/terraform/creds.json"

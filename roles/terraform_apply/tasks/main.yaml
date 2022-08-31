@@ -47,3 +47,9 @@
       vm_cpu: "{{vm_cpu}}"
       dns_suffix_list: "{{dns_suffix_list|to_json}}"
       workgroup: "{{workgroup|default([])}}"
+
+- name: Clean up project folder
+  ansible.builtin.file:
+    path: "{{proj_root}}{{proj_name}}"
+    state: absent
+    
