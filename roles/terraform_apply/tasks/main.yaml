@@ -1,27 +1,30 @@
 ---
-- name: Check if project folder already exists
-  ansible.builtin.stat:
+- name: Create project folder
+  ansible.builtin.file:
     path: "{{proj_root}}{{proj_name}}"
-  register: project
+    state: directory
+    mode: 0755
 
-- name: Check to see if project folder exists
-  when: not project.stat.exists
-  block:
-    - name: Create Terraform project folder
-      ansible.builtin.file:
-        path: "{{proj_root}}{{proj_name}}"
-        state: directory
+- name: Copy project files into project folder
+  ansible.builtin.copy:
+    src: "{{ item }}-{{ vm_folder_name }}.tf"
+    dest: "{{proj_root}}{{proj_name}}/{{ item }}.tf"
+    mode: 0644
+  loop:
+    - main
+    - variables
 
-    - name: Copy template files into project folder
-      ansible.builtin.copy: 
-        src: "{{temp_path}}"
-        dest: "{{proj_root}}{{proj_name}}/"
+- name: Create backend tf
+  ansible.builtin.template: 
+    src: backend.tf.j2
+    dest: "{{proj_root}}{{proj_name}}/backend.tf"
+    mode: 0644
 
 - name: Create creds file
   ansible.builtin.template:
     src: creds.json.j2
     dest: /terraform/creds.json
-    mode: 0400    
+    mode: 0400
 
 - name: Run Terraform Apply
   community.general.terraform:
