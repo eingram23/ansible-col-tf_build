@@ -1,4 +1,9 @@
-# Deploy RHEL8.5 VMs
+provider "google" {
+  credentials = "/terraform/creds.json"
+  gcp_project = var.gcp_project
+  gcp_region  = var.gcp_region
+  gcp_zone    = var.gcp_zone
+}
 
 provider "vault" {
 }
@@ -102,7 +107,6 @@ resource "vsphere_virtual_machine" "vm" {
       network_interface {
         ipv4_address = element(var.ip_address_list, count.index)
         ipv4_netmask = 24
-        # dns_domain = var.dns_domain
         dns_domain = element(var.dns_suffix_list, count.index)
       }
 

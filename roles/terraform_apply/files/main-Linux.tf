@@ -1,22 +1,3 @@
-# Deploy RHEL8.5 VMs
-
-# terraform {
-#   required_providers {
-#     google = {
-#       source = "hashicorp/google"
-#       version = "3.9"
-#     }
-#   }
-# }
-
-# terraform {
-#  backend "gcs" {
-#    bucket  = "yc-srv1-bucket-tfstate"
-#    prefix  = "terraform/state"
-#    credentials = "/terraform/creds.json"
-#  }
-# }
-
 provider "google" {
   credentials = "/terraform/creds.json"
   gcp_project = var.gcp_project
