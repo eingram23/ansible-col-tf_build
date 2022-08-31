@@ -32,6 +32,7 @@
     project_path: "{{proj_root}}{{proj_name}}"
     state: absent
     variables:
+      proj_name: "{{ proj_name }}"
       vsphere_template: "{{vsphere_template}}"
       vsphere_datastore_list: "{{vsphere_datastore_list|to_json}}"
       vsphere_network_list: "{{vsphere_network_list|to_json}}"
@@ -43,6 +44,7 @@
       vm_cpu: "{{vm_cpu}}"
       dns_suffix_list: "{{dns_suffix_list|to_json}}"
       workgroup: "{{workgroup|default([])}}"
+
 
 - name: Clean up project folder
   ansible.builtin.file:
