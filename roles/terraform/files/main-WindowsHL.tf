@@ -117,6 +117,25 @@ resource "vsphere_virtual_machine" "vm" {
       dns_suffix_list = var.dns_suffix_list
     }
   }
+
+  connection {
+    # host = self.clone.0.customize.0.network_interface.0.ipv4_address
+    host     = element(var.ip_address_list, count.index)
+    type     = "winrm"
+    port     = 5985
+    insecure = true
+    https    = false
+    use_ntlm = true
+    user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
+    password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
+      
+      provisioner "remote-exec" {
+      when    = destroy
+      command = <<-EOT
+        "cmd /c powershell.exe Remove-Computer -Force -Confirm:$False"
+      EOT
+    }
+  }
 }
 
 resource "null_resource" "vm" {
@@ -146,12 +165,5 @@ resource "null_resource" "vm" {
     inline = [
       "powershell -ExecutionPolicy Bypass -File c:\\temp\\config.ps1"
     ]
-  }
-
-  provisioner "remote-exec" {
-    when    = destroy
-    command = <<-EOT
-      "cmd /c powershell.exe Remove-Computer -Force -Confirm:$False"
-    EOT
   }
 }
