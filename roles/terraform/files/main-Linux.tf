@@ -1,22 +1,3 @@
-# Deploy RHEL8.5 VMs
-
-# terraform {
-#   required_providers {
-#     google = {
-#       source = "hashicorp/google"
-#       version = "3.9"
-#     }
-#   }
-# }
-
-# terraform {
-#  backend "gcs" {
-#    bucket  = "yc-srv1-bucket-tfstate"
-#    prefix  = "terraform/state"
-#    credentials = "/terraform/creds.json"
-#  }
-# }
-
 provider "google" {
   credentials = "/terraform/creds.json"
   gcp_project = var.gcp_project
@@ -125,31 +106,6 @@ resource "vsphere_virtual_machine" "vm" {
       dns_suffix_list = var.dns_suffix_list
     }
   }
-
-  # connection {
-  #   type     = "ssh"
-  #   agent    = false
-  #   host     = self.clone.0.customize.0.network_interface.0.ipv4_address
-  #   user     = data.vault_generic_secret.ssh_username.data["ssh_username"]
-  #   password = data.vault_generic_secret.ssh_password.data["ssh_password"]
-  # }
-
-  # provisioner "file" {
-  #   source      = "/Users/edwardingram/code/Terraform/files/shell/post_script.sh"
-  #   destination = "/home/ansible/post_script.sh"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     # "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S subscription-manager register --force --username ${data.vault_generic_secret.sub_email.data["sub_email"]} --password ${data.vault_generic_secret.sub_password.data["sub_password"]} --auto-attach",
-  #     "chmod +x /home/ansible/post_script.sh",
-  #     "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S /home/ansible/post_script.sh"
-  #   ]
-  # }
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "null_resource" "vm" {
@@ -182,18 +138,3 @@ resource "null_resource" "vm" {
   }
 }
 
-# resource "null_resource" "remove_host" {
-
-#   triggers = {
-#     ansible_group = var.ansible_group[count.index]
-#     vm_name_list       = var.vm_name_list[count.index]
-#     ip_address    = var.ip_address[count.index]
-#   }
-
-#   provisioner "local-exec" {
-#     when    = destroy
-#     command = <<-EOT
-#       ansible-playbook ~/code/Terraform/files/ansible/tf_remove_server_ansible_pihole.yaml --extra-vars "group=${self.triggers.ansible_group} newhost=${self.triggers.vm_name_list}.local.lan newip=${self.triggers.ip_address}"
-#     EOT
-#   }
-# }

@@ -11,6 +11,12 @@ data "vault_generic_secret" "vsphere_password" {
 data "vault_generic_secret" "win_password" {
   path = "secret/win/administrator"
 }
+data "vault_generic_secret" "hladmin_username" {
+  path = "secret/win/homelab"
+}
+data "vault_generic_secret" "hladmin_password" {
+  path = "secret/win/homelab"
+}
 
 provider "vsphere" {
   user                 = data.vault_generic_secret.vsphere_username.data["vsphere_username"]
@@ -46,7 +52,7 @@ data "vsphere_virtual_machine" "template" {
 }
 
 data "vsphere_folder" "folder" {
-  path          = "/HomeLab Datacenter/vm/WindowsWG"
+  path          = "/HomeLab Datacenter/vm/WindowsHL"
 }
 
 resource "vsphere_virtual_machine" "vm" {
@@ -95,15 +101,15 @@ resource "vsphere_virtual_machine" "vm" {
         organization_name     = var.organization_name
         auto_logon            = "true"
         time_zone             = var.time_zone
-        workgroup             = var.workgroup
+        join_domain           = element(var.dns_suffix_list, count.index)
+        domain_admin_user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
+        domain_admin_password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
         # run_once_command_list = ""
       }
 
       network_interface {
         ipv4_address = element(var.ip_address_list, count.index)
         ipv4_netmask = 24
-        # dns_domain = var.dns_domain
-        dns_domain = element(var.dns_suffix_list, count.index)
       }
 
       ipv4_gateway    = element(var.ip_gateway_list, count.index)
@@ -111,29 +117,6 @@ resource "vsphere_virtual_machine" "vm" {
       dns_suffix_list = var.dns_suffix_list
     }
   }
-
-  # connection {
-  #   host     = self.clone.0.customize.0.network_interface.0.ipv4_address
-  #   # timeout  = "15m"
-  #   type     = "winrm"
-  #   port     = 5985
-  #   insecure = true
-  #   https    = false
-  #   use_ntlm = true
-  #   user     = "administrator"
-  #   password = data.vault_generic_secret.win_password.data["win_password"]
-  # }
-
-  # provisioner "file" {
-  #   source      = "/Users/edwardingram/code/Terraform/files/powershell/"
-  #   destination = "c:/temp"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "powershell -ExecutionPolicy Bypass -File c:\\temp\\config.ps1"
-  #   ]
-  # }
 }
 
 resource "null_resource" "vm" {
@@ -150,31 +133,25 @@ resource "null_resource" "vm" {
     insecure = true
     https    = false
     use_ntlm = true
-    user     = "administrator"
-    password = data.vault_generic_secret.win_password.data["win_password"]
+    user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
+    password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/"
+    source      = "${path.module}/scripts"
     destination = "c:/temp"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "powershell -ExecutionPolicy Bypass -File c:\\temp\\config.ps1",
-      "powershell -command Set-ItemProperty -Path HKLM:\\System\\CurrentControlSet\\Services\\Tcpip\\Parameters -Name Domain -Value local.lan"
+      "powershell -ExecutionPolicy Bypass -File c:\\temp\\config.ps1"
     ]
+  }
 
-    # connection {
-    #   host = self.clone.0.customize.0.network_interface.0.ipv4_address
-    #   timeout  = "3m"
-    #   type     = "winrm"
-    #   port     = 5985
-    #   insecure = true
-    #   https = false
-    #   use_ntlm = true
-    #   user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
-    #   password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
-    # }
+  provisioner "remote-exec" {
+    when    = destroy
+    command = <<-EOT
+      "cmd /c powershell.exe Remove-Computer -Force -Confirm:$False"
+    EOT
   }
 }

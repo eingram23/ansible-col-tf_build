@@ -13,11 +13,8 @@ data "vault_generic_secret" "vsphere_username" {
 data "vault_generic_secret" "vsphere_password" {
   path = "secret/vsphere/vcsa"
 }
-data "vault_generic_secret" "ssh_username" {
-  path = "secret/ssh/ansible"
-}
-data "vault_generic_secret" "ssh_password" {
-  path = "secret/ssh/ansible"
+data "vault_generic_secret" "win_password" {
+  path = "secret/win/administrator"
 }
 
 provider "vsphere" {
@@ -32,7 +29,7 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  count     = length(var.vsphere_datastore_list)
+  count         = length(var.vsphere_datastore_list)
   name          = element(var.vsphere_datastore_list, count.index)
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -43,7 +40,7 @@ data "vsphere_compute_cluster" "cluster" {
 }
 
 data "vsphere_network" "network" {
-  count = length(var.vsphere_network_list)
+  count         = length(var.vsphere_network_list)
   name          = element(var.vsphere_network_list, count.index)
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -54,11 +51,11 @@ data "vsphere_virtual_machine" "template" {
 }
 
 data "vsphere_folder" "folder" {
-  path          = "/HomeLab Datacenter/vm/Linux"
+  path          = "/HomeLab Datacenter/vm/WindowsWG"
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  
+
   count = length(var.vm_name_list)
   name  = element(var.vm_name_list, count.index)
 
@@ -86,95 +83,67 @@ resource "vsphere_virtual_machine" "vm" {
     thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
   }
 
+  disk {
+    label       = "disk1"
+    size        = "40"
+    unit_number = 1
+  }
+
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
 
     customize {
-      linux_options {
-        host_name = element(var.vm_name_list, count.index)
-        domain = element(var.dns_suffix_list, count.index)
+      windows_options {
+        computer_name         = element(var.vm_name_list, count.index)
+        admin_password        = data.vault_generic_secret.win_password.data["win_password"]
+        full_name             = var.full_name
+        organization_name     = var.organization_name
+        auto_logon            = "true"
+        time_zone             = var.time_zone
+        workgroup             = var.workgroup
+        # run_once_command_list = ""
       }
 
       network_interface {
         ipv4_address = element(var.ip_address_list, count.index)
         ipv4_netmask = 24
+        dns_domain = element(var.dns_suffix_list, count.index)
       }
 
-      ipv4_gateway = element(var.ip_gateway_list, count.index)
-      # ipv4_gateway    = var.ip_gateway
+      ipv4_gateway    = element(var.ip_gateway_list, count.index)
       dns_server_list = var.dns_server_list
       dns_suffix_list = var.dns_suffix_list
     }
   }
-
-  # connection {
-  #   type     = "ssh"
-  #   agent    = false
-  #   host     = self.clone.0.customize.0.network_interface.0.ipv4_address
-  #   user     = data.vault_generic_secret.ssh_username.data["ssh_username"]
-  #   password = data.vault_generic_secret.ssh_password.data["ssh_password"]
-  # }
-
-  # provisioner "file" {
-  #   source      = "/Users/edwardingram/code/Terraform/files/shell/post_script.sh"
-  #   destination = "/home/ansible/post_script.sh"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     # "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S subscription-manager register --force --username ${data.vault_generic_secret.sub_email.data["sub_email"]} --password ${data.vault_generic_secret.sub_password.data["sub_password"]} --auto-attach",
-  #     "chmod +x /home/ansible/post_script.sh",
-  #     "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S /home/ansible/post_script.sh"
-  #   ]
-  # }
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "null_resource" "vm" {
-
   triggers = {
     ip = join(",", vsphere_virtual_machine.vm.*.default_ip_address)
   }
   count = length(var.vm_name_list)
 
   connection {
-    type     = "ssh"
-    agent    = false
-    # host     = self.clone.0.customize.0.network_interface.0.ipv4_address
+    # host = self.clone.0.customize.0.network_interface.0.ipv4_address
     host     = element(var.ip_address_list, count.index)
-    user     = data.vault_generic_secret.ssh_username.data["ssh_username"]
-    password = data.vault_generic_secret.ssh_password.data["ssh_password"]
+    type     = "winrm"
+    port     = 5985
+    insecure = true
+    https    = false
+    use_ntlm = true
+    user     = "administrator"
+    password = data.vault_generic_secret.win_password.data["win_password"]
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/post_script.sh"
-    destination = "/home/ansible/post_script.sh"
+    source      = "${path.module}/scripts/"
+    destination = "c:/temp"
   }
 
   provisioner "remote-exec" {
     inline = [
-      # "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S subscription-manager register --force --username ${data.vault_generic_secret.sub_email.data["sub_email"]} --password ${data.vault_generic_secret.sub_password.data["sub_password"]} --auto-attach",
-      "chmod +x /home/ansible/post_script.sh",
-      "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S /home/ansible/post_script.sh"
+      "powershell -ExecutionPolicy Bypass -File c:\\temp\\config.ps1",
+      "powershell -command Set-ItemProperty -Path HKLM:\\System\\CurrentControlSet\\Services\\Tcpip\\Parameters -Name Domain -Value local.lan"
     ]
   }
 }
-
-# resource "null_resource" "remove_host" {
-
-#   triggers = {
-#     ansible_group = var.ansible_group[count.index]
-#     vm_name_list       = var.vm_name_list[count.index]
-#     ip_address    = var.ip_address[count.index]
-#   }
-
-#   provisioner "local-exec" {
-#     when    = destroy
-#     command = <<-EOT
-#       ansible-playbook ~/code/Terraform/files/ansible/tf_remove_server_ansible_pihole.yaml --extra-vars "group=${self.triggers.ansible_group} newhost=${self.triggers.vm_name_list}.local.lan newip=${self.triggers.ip_address}"
-#     EOT
-#   }
-# }

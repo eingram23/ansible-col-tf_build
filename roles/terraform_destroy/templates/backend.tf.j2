@@ -1,7 +1,0 @@
-terraform {
- backend "gcs" {
-   bucket  = "yc-srv1-bucket-tfstate"
-   prefix  = "terraform/state/{{ proj_name }}"
-   credentials = "creds.json"
- }
-}
