@@ -119,8 +119,8 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   connection {
-    host = self.clone.0.customize.0.network_interface.0.ipv4_address
-    # host     = element(var.ip_address_list, count.index)
+    # host = self.clone.0.customize.0.network_interface.0.ipv4_address
+    host     = element(var.ip_address_list, count.index)
     type     = "winrm"
     port     = 5985
     insecure = true
