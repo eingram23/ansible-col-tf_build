@@ -135,6 +135,7 @@ resource "vsphere_virtual_machine" "vm" {
       password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
     }
   }
+}
 
 resource "null_resource" "vm" {
   triggers = {
