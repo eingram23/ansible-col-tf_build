@@ -10,8 +10,6 @@ variable "gcp_zone" {
   default = "us-west1-a"
 }
 
-variable "proj_name" {}
-
 variable "vsphere_username" {
   default   = ""
   sensitive = true

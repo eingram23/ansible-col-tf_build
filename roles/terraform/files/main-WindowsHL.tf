@@ -51,10 +51,6 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_folder" "folder" {
-  path          = "/HomeLab Datacenter/vm/WindowsHL"
-}
-
 resource "vsphere_virtual_machine" "vm" {
 
   count = length(var.vm_name_list)
@@ -115,24 +111,6 @@ resource "vsphere_virtual_machine" "vm" {
       ipv4_gateway    = element(var.ip_gateway_list, count.index)
       dns_server_list = var.dns_server_list
       dns_suffix_list = var.dns_suffix_list
-    }
-  }
-  
-  provisioner "remote-exec" {
-      when    = destroy
-      command = <<-EOT
-        "cmd /c powershell.exe Remove-Computer -Force -Confirm:$False"
-      EOT
-    connection {
-      # host = self.clone.0.customize.0.network_interface.0.ipv4_address
-      host     = element(var.ip_address_list, count.index)
-      type     = "winrm"
-      port     = 5985
-      insecure = true
-      https    = false
-      use_ntlm = true
-      user     = data.vault_generic_secret.hladmin_username.data["hladmin_username"]
-      password = data.vault_generic_secret.hladmin_password.data["hladmin_password"]
     }
   }
 }

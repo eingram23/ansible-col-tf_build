@@ -53,10 +53,6 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_folder" "folder" {
-  path          = "/HomeLab Datacenter/vm/Linux"
-}
-
 resource "vsphere_virtual_machine" "vm" {
   
   count = length(var.vm_name_list)
