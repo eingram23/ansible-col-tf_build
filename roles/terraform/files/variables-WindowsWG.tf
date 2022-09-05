@@ -1,5 +1,5 @@
 variable "gcp_project" {
-  default = "yc-srv1-proj"
+  default = "proj-yc-srv1"
 }
 
 variable "gcp_region" {

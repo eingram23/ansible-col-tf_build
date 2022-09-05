@@ -40,7 +40,7 @@
     project_path: "{{ proj_root }}{{ proj_name }}"
     state: present
     variables:
-      proj_name: "{{ proj_name }}"
+      # proj_name: "{{ proj_name }}"
       vsphere_template: "{{ vsphere_template }}"
       vsphere_datastore_list: "{{ vsphere_datastore_list | to_json }}"
       vsphere_network_list: "{{ vsphere_network_list | to_json }}"
