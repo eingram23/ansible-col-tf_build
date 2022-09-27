@@ -83,7 +83,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   dynamic "disk" {
-    for_each = var.vm_disks
+    for_each = var.vm_disks_list
     content {
       label = disk.value["label"]
       size = disk.value["size"]
