@@ -7,7 +7,7 @@
 
 - name: Copy project files into project folder
   ansible.builtin.copy:
-    src: "{{ item }}-{{ vm_folder_name }}.tf"
+    src: "./projects/{{ proj_name }}/{{ item }}-{{ vm_folder_name }}.tf"
     dest: "{{ proj_root }}{{ proj_name }}/{{ item }}.tf"
     mode: 0644
   loop:
@@ -45,6 +45,7 @@
       vsphere_datastore_list: "{{ vsphere_datastore_list | to_json }}"
       vsphere_network_list: "{{ vsphere_network_list | to_json }}"
       vm_folder_name: "{{ vm_folder_name }}"
+      vm_disks: "{{ vm_disks }}"
       vm_name_list: "{{ vm_name_list | to_json }}"
       ip_address_list: "{{ ip_address_list | to_json }}"
       ip_gateway_list: "{{ ip_gateway_list | to_json }}"

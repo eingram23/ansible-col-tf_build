@@ -123,3 +123,7 @@ variable "time_zone" {
 variable "workgroup" {}
 
 variable "vm_folder_name" {}
+
+variable "vm_disks" {
+  default = []
+}

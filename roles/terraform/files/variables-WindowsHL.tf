@@ -134,4 +134,8 @@ variable "time_zone" {
 
 variable "vm_folder_name" {}
 
+variable "vm_disks" {
+  default = []
+}
+
 variable "workgroup" {}

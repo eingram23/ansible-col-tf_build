@@ -82,8 +82,8 @@ resource "vsphere_virtual_machine" "vm" {
     thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
   }
 
-  dynamic "disk" {
-    for_each = var.vm_disks
+  dynamic "vm_disk" {
+    for_each = var.disks
     content {
       label = disk.value["label"]
       size = disk.value["size"]
