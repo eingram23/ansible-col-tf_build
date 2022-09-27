@@ -83,7 +83,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   dynamic "disk" {
-    for_each = var.vm_disks_list
+    for_each = toset(var.vm_disks_list)
     content {
       label = disk.value["label"]
       unit_number = disk.value["id"]
