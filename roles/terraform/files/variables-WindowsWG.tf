@@ -124,6 +124,6 @@ variable "workgroup" {}
 
 variable "vm_folder_name" {}
 
-variable "vm_disks" {
+variable "vm_disks_list" {
   default = []
 }

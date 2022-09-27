@@ -54,7 +54,7 @@ variable "vm_folder_name" {
   default = ""
 }
 
-variable "vm_disks" {
+variable "vm_disks_list" {
   default = []
 }
 
