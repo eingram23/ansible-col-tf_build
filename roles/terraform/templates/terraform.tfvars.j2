@@ -1,0 +1,16 @@
+vsphere_template = "{{ vsphere_template }}"
+vsphere_datastore_list = [{{ vsphere_datastore_list }}]
+
+vsphere_network_list = [{{ vsphere_datastore_list }}]
+vm_name_list = [{{ vm_name_list }}]
+
+ip_address_list = [{{ ip_address_list }}]
+
+dns_suffix_list = [{{ dns_suffix_list }}]
+
+ip_gateway_list = [{{ ip_gateway_list }}]
+
+vm_ram = "{{ vm_ram }}"
+vm_cpu = "{{ vm_cpu }}"
+
+{{ vm_disks_list | default('NONE') }}

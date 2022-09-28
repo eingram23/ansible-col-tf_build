@@ -3,13 +3,13 @@
   ansible.builtin.file:
     path: "{{ proj_root }}{{ proj_name }}/scripts"
     state: directory
-    mode: 0755
+    mode: '0755'
 
 - name: Copy project files into project folder
   ansible.builtin.copy:
     src: "{{ item }}-{{ vm_folder_name }}.tf"
     dest: "{{ proj_root }}{{ proj_name }}/{{ item }}.tf"
-    mode: 0644
+    mode: '0644'
   loop:
     - main
     - variables
@@ -22,37 +22,43 @@
     - config.ps1
     - post_script.sh
 
+- name: Create tfvars file
+  ansible.builtin.template:
+    src: terraform.tfvars.j2
+    dest: "{{ proj_root }}{{ proj_name }}/terraform.tfvars"
+    mode: '0644'
+
 - name: Create backend tf
   ansible.builtin.template:
     src: backend.tf.j2
     dest: "{{ proj_root }}{{ proj_name }}/backend.tf"
-    mode: 0644
+    mode: '0644'
 
 - name: Create creds file
   ansible.builtin.template:
     src: creds.json.j2
     dest: "{{ proj_root }}{{ proj_name }}/creds.json"
-    mode: 0400
+    mode: '0400'
 
 - name: Run Terraform Apply
   community.general.terraform:
     force_init: true
     project_path: "{{ proj_root }}{{ proj_name }}"
     state: present
-    variables:
-      # proj_name: "{{ proj_name }}"
-      vsphere_template: "{{ vsphere_template }}"
-      vsphere_datastore_list: "{{ vsphere_datastore_list | to_json }}"
-      vsphere_network_list: "{{ vsphere_network_list | to_json }}"
-      vm_folder_name: "{{ vm_folder_name }}"
-      vm_disks_list: "{{ vm_disks_list | to_json }}"
-      vm_name_list: "{{ vm_name_list | to_json }}"
-      ip_address_list: "{{ ip_address_list | to_json }}"
-      ip_gateway_list: "{{ ip_gateway_list | to_json }}"
-      vm_ram: "{{ vm_ram }}"
-      vm_cpu: "{{ vm_cpu }}"
-      dns_suffix_list: "{{ dns_suffix_list | to_json }}"
-      workgroup: "{{ workgroup | default([]) }}"
+    # variables:
+    #   # proj_name: "{{ proj_name }}"
+    #   vsphere_template: "{{ vsphere_template }}"
+    #   vsphere_datastore_list: "{{ vsphere_datastore_list | to_json }}"
+    #   vsphere_network_list: "{{ vsphere_network_list | to_json }}"
+    #   vm_folder_name: "{{ vm_folder_name }}"
+    #   vm_disks_list: "{{ vm_disks_list | to_json }}"
+    #   vm_name_list: "{{ vm_name_list | to_json }}"
+    #   ip_address_list: "{{ ip_address_list | to_json }}"
+    #   ip_gateway_list: "{{ ip_gateway_list | to_json }}"
+    #   vm_ram: "{{ vm_ram }}"
+    #   vm_cpu: "{{ vm_cpu }}"
+    #   dns_suffix_list: "{{ dns_suffix_list | to_json }}"
+    #   workgroup: "{{ workgroup | default([]) }}"
 
 - name: Clean up project folder
   ansible.builtin.file:
