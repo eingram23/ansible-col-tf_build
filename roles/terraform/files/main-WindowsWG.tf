@@ -121,6 +121,12 @@ resource "vsphere_virtual_machine" "vm" {
       dns_suffix_list = var.dns_suffix_list
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      clone[0].template_uuid,
+    ]
+  }
 }
 
 resource "null_resource" "vm" {
