@@ -2,7 +2,7 @@
   "type": "service_account",
   "project_id": "proj-yc-srv1",
   "private_key_id": "470d38749868584da2ebe35b757ae653460447d0",
-  "private_key": "{{ lookup('hashi_vault','secret=secret/data/gcp/yc-srv1-proj:key') }}",
+  "private_key": "{{ lookup('hashi_vault','secret=secret/gcp/yc-srv1-proj:key') }}",
   "client_email": "proj-yc-srv1-sa1@proj-yc-srv1.iam.gserviceaccount.com",
   "client_id": "113935345052184642278",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
