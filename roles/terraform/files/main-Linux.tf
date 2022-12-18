@@ -37,7 +37,7 @@ data "vsphere_datastore" "datastore" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_storage_policy_id" "policy" {
+data "vsphere_storage_policy" "policy" {
   name          = var.vsphere_storage_policy
 }
 
@@ -64,7 +64,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.datastore[count.index].id
-  storage_policy_id = data.vsphere_storage_policy_id.policy.id
+  storage_policy_id = data.vsphere_storage_policy.policy.id
   folder           = "/HomeLab Datacenter/vm/${var.vm_folder_name}"
   firmware         = "efi"
 
