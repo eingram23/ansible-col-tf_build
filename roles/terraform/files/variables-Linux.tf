@@ -21,7 +21,7 @@ variable "vsphere_password" {
 }
 
 variable "vsphere_server" {
-  default = "vcsa.local.lan"
+  default = "vcsa-1.local.lan"
 }
 
 variable "vm_name_list" {
