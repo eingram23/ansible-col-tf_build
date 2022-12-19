@@ -46,6 +46,10 @@ variable "vsphere_datastore_list" {
   type = list(any)
 }
 
+variable "vsphere_storage_policy" {
+  default = ""
+}
+
 variable "vsphere_template" {
   default = ""
 }

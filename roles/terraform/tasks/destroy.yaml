@@ -40,6 +40,7 @@
     variables:
       vsphere_template: "{{ vsphere_template }}"
       vsphere_datastore_list: "{{ vsphere_datastore_list | to_json }}"
+      vsphere_storage_policy: "{{ vsphere_storage_policy }}"
       vsphere_network_list: "{{ vsphere_network_list | to_json }}"
       vm_folder_name: "{{ vm_folder_name }}"
       vm_name_list: "{{ vm_name_list | to_json }}"
