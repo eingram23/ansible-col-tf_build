@@ -126,3 +126,7 @@ variable "dns_suffix_list" {
 variable "workgroup" {
   default = ""
 }
+
+variable "vm_efi_secure" {
+  default = false
+}

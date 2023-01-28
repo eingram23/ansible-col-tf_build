@@ -132,4 +132,6 @@ variable "vm_disks_list" {
   default = []
 }
 
-variable "vm_firmware" {}
+variable "vm_efi_secure" {
+  default = false
+}

@@ -143,3 +143,7 @@ variable "vm_disks_list" {
 }
 
 variable "workgroup" {}
+
+variable "vm_efi_secure" {
+  default = false
+}
