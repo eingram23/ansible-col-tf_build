@@ -63,7 +63,7 @@ resource "vsphere_virtual_machine" "vm" {
   datastore_id     = data.vsphere_datastore.datastore[count.index].id
   storage_policy_id = data.vsphere_storage_policy.policy.id
   folder           = "/HomeLab Datacenter/vm/${var.vm_folder_name}"
-  # firmware         = "efi"
+  firmware         = var.vm_firmware
 
   num_cpus           = var.vm_cpu
   memory             = var.vm_ram

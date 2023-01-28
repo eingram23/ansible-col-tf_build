@@ -58,6 +58,7 @@
       vm_cpu: "{{ vm_cpu }}"
       dns_suffix_list: "{{ dns_suffix_list | to_json }}"
       workgroup: "{{ workgroup | default([]) }}"
+      vm_firmware: "{{ vm_firmware }}"
 
 - name: Clean up project folder
   ansible.builtin.file:
