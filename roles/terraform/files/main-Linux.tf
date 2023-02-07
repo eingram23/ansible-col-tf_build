@@ -13,9 +13,6 @@ data "vault_generic_secret" "vsphere_username" {
 data "vault_generic_secret" "vsphere_password" {
   path = "secret/vsphere/vcsa"
 }
-data "vault_generic_secret" "ssh_username" {
-  path = "secret/ssh/ansible"
-}
 data "vault_generic_secret" "ssh_password" {
   path = "secret/ssh/ansible"
 }
@@ -105,6 +102,16 @@ resource "vsphere_virtual_machine" "vm" {
       linux_options {
         host_name = element(var.vm_name_list, count.index)
         domain = element(var.dns_suffix_list, count.index)
+        script_text = <<-EOT
+          #!/bin/sh
+          if [ x$1 = x"precustomization" ]; then
+            echo "Do Precustomization tasks"
+            usermod -p $(openssl passwd -1 ${data.vault_generic_secret.ssh_password.data["ssh_password"]}) root
+            useradd -p $(openssl passwd -1 ${data.vault_generic_secret.ssh_password.data["ssh_password"]}) ansible
+          elif [ x$1 = x"postcustomization" ]; then
+            echo "Do Postcustomization tasks"
+          fi
+        EOT
       }
 
       network_interface {
@@ -138,20 +145,19 @@ resource "null_resource" "vm" {
     agent    = false
     # host     = self.clone.0.customize.0.network_interface.0.ipv4_address
     host     = element(var.ip_address_list, count.index)
-    user     = data.vault_generic_secret.ssh_username.data["ssh_username"]
+    user     = "root"
     password = data.vault_generic_secret.ssh_password.data["ssh_password"]
   }
 
   provisioner "file" {
     source      = "${path.module}/scripts/post_script.sh"
-    destination = "/home/ansible/post_script.sh"
+    destination = "/root/post_script.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       # "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S subscription-manager register --force --username ${data.vault_generic_secret.sub_email.data["sub_email"]} --password ${data.vault_generic_secret.sub_password.data["sub_password"]} --auto-attach",
-      "chmod +x /home/ansible/post_script.sh",
-      "echo ${data.vault_generic_secret.ssh_password.data["ssh_password"]} | sudo -S /home/ansible/post_script.sh"
+      "sh /root/post_script.sh"
     ]
   }
 }
