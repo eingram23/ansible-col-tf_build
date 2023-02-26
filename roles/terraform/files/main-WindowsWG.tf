@@ -7,7 +7,7 @@ provider "google" {
 
 provider "vault" {
   auth_login {
-    path = "auth/approle/role/ansible"
+    path = "auth/approle/login"
 
     parameters = {
       role_id   = var.login_approle_role_id
