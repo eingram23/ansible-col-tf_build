@@ -6,6 +6,7 @@ provider "google" {
 }
 
 provider "vault" {
+  skip_child_token = true
   auth_login {
     path = "auth/approle/login"
 
@@ -14,7 +15,6 @@ provider "vault" {
       secret_id = var.login_approle_secret_id
     }
   }
-}
 
 data "vault_generic_secret" "vsphere_username" {
   path = "secret/vsphere/vcsa"
