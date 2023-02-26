@@ -15,6 +15,7 @@ provider "vault" {
       secret_id = var.login_approle_secret_id
     }
   }
+}
 
 data "vault_generic_secret" "vsphere_username" {
   path = "secret/vsphere/vcsa"
