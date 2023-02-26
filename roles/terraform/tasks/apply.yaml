@@ -59,6 +59,8 @@
       dns_suffix_list: "{{ dns_suffix_list | to_json }}"
       workgroup: "{{ workgroup | default([]) }}"
       vm_efi_secure: "{{ vm_efi_secure | lower }}"
+      login_approle_role_id: "{{ lookup('hashi_vault', 'secret=secret/approle/ansible:role_id') }}"
+      login_approle_secret_id: "{{ lookup('hashi_vault', 'secret=secret/approle/ansible:secret_id') }}"
 
 - name: Clean up project folder
   ansible.builtin.file:
