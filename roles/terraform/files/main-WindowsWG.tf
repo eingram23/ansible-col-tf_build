@@ -16,8 +16,6 @@ provider "vault" {
   }
 }
 
-provider "vault" {
-}
 data "vault_generic_secret" "vsphere_username" {
   path = "secret/vsphere/vcsa"
 }
