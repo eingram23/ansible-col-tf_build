@@ -123,7 +123,10 @@ resource "vsphere_virtual_machine" "vm" {
         auto_logon            = "true"
         time_zone             = var.time_zone
         workgroup             = var.workgroup
-        # run_once_command_list = ""
+        run_once_command_list = [
+          "password = ConvertTo-SecureString '${data.vault_generic_secret.ssh_password.data["ssh_password"]}' -AsPlainText -Force",  
+          "New-LocalUser -Name 'ansible' -Password $password -FullName 'Ansible' -Description 'Ansible service account'"
+        ]
       }
 
       network_interface {
