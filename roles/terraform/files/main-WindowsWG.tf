@@ -123,9 +123,8 @@ resource "vsphere_virtual_machine" "vm" {
         auto_logon            = "true"
         time_zone             = var.time_zone
         workgroup             = var.workgroup
-        run_once_command_list = [
-          "$password = ConvertTo-SecureString '${data.vault_generic_secret.win_password.data["win_password"]}' -AsPlainText -Force",  
-          "New-LocalUser -Name 'ansible' -Password $password -FullName 'Ansible' -Description 'Ansible service account'"
+        run_once_command_list = [  
+          "cmd /c powershell.exe New-LocalUser -Name 'ansible' -Password (ConvertTo-SecureString ${data.vault_generic_secret.win_password.data["win_password"]} -AsPlainText -Force) -FullName 'Ansible' -Description 'Ansible service account'"
         ]
       }
 
