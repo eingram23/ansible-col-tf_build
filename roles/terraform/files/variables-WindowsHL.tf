@@ -10,6 +10,9 @@ variable "gcp_zone" {
   default = "us-west1-a"
 }
 
+variable login_approle_role_id {}
+variable login_approle_secret_id {}
+
 variable "vsphere_username" {
   default   = ""
   sensitive = true

@@ -6,6 +6,15 @@ provider "google" {
 }
 
 provider "vault" {
+  skip_child_token = true
+  auth_login {
+    path = "auth/approle/login"
+
+    parameters = {
+      role_id   = var.login_approle_role_id
+      secret_id = var.login_approle_secret_id
+    }
+  }
 }
 data "vault_generic_secret" "vsphere_username" {
   path = "secret/vsphere/vcsa"
