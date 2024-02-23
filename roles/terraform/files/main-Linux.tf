@@ -92,6 +92,7 @@ resource "vsphere_virtual_machine" "vm" {
     size             = data.vsphere_virtual_machine.template.disks.0.size
     eagerly_scrub    = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
     thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
+    storage_policy_id = data.vsphere_storage_policy.policy.id
   }
 
   dynamic "disk" {
@@ -101,6 +102,7 @@ resource "vsphere_virtual_machine" "vm" {
       unit_number = disk.value["id"]
       size = disk.value["size"]
       thin_provisioned = disk.value["thin_provisioned"]
+      storage_policy_id = data.vsphere_storage_policy.policy.id
     }
   }
 
