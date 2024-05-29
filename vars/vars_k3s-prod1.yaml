@@ -1,0 +1,67 @@
+---
+proj_root: "/var/tmp/terraform/projects/"
+
+### MAKE EDITS BELOW ###
+
+# Edit this to change distro
+# vsphere_template: TMP-RHEL85_Packer
+vsphere_template: TMP-Rocky9_Packer
+# vsphere_template: TMP-Rocky8_Packer
+# vsphere_template: TMP-CentOS_Packer
+# vsphere_template: TMP-Win2022Core_Packer
+# vsphere_template: TMP-Win2016_Packer
+# vsphere_template: TMP-Win2019_Packer
+
+vm_folder_name: Linux
+# vm_folder_name: WindowsWG
+# workgroup: WORKGROUP
+# vm_folder_name: WindowsHL
+
+vm_ram: 4096
+vm_cpu: 2
+vm_efi_secure: false
+
+# All lists must have same # of elements
+
+vsphere_datastore_list:
+  # - esxinuc1:datastore1
+  # - esxinuc2:datastore1
+  # - esxinuc3:datastore1
+  - vsanDatastore
+  # - vsanDatastore
+  # - vsanDatastore
+vsphere_storage_policy: "vSAN - No Fault Tolerance"
+# vsphere_storage_policy: vSAN Default Storage Policy
+vsphere_network_list:
+  # - DPG-Lab-LAN1
+  - DPG-Services
+  # - DPG-Services
+vm_name_list:
+  - k3s-prod1
+  # - k3s-prod2
+  # - k3s-prod3
+ip_address_list:
+  - 192.168.1.221
+  # - 192.168.1.222
+  # - 192.168.1.223
+ip_gateway_list:
+  # - 10.10.0.1
+  - 192.168.1.1
+  # - 192.168.1.1
+dns_suffix_list:
+  - local.lan
+  # - local.lan
+  # - local.lan
+
+# For any extra vmdks (For Windows, start with ID 2)
+# vm_disks_list: 'vm_disks_list = []'
+vm_disks_list: 'vm_disks_list = [{ label = "lppstorage", id = 1, size = 100, thin_provisioned = true}]'
+
+# Uncomment post build tasks to run
+task:
+  - none
+  # - container_host
+  # - webapps
+  # - splunk_uf
+  # - snmpd
+  # - node_exporter

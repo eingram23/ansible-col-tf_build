@@ -1,0 +1,93 @@
+---
+# Requires proj_name set at runtime
+- name: Deploy Terraform plan
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block:
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: pull
+
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: addchange
+      when: vm_folder_name == "WindowsWG"
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.inmem_inv
+        tasks_from: WindowsWG
+      when: vm_folder_name == "WindowsWG"
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.inmem_inv
+        tasks_from: WindowsHL
+      when: vm_folder_name == "WindowsHL"
+
+    - ansible.builtin.include_role:
+        name: eingram23.tf_build.terraform
+        tasks_from: apply
+
+- name: Create DNS entries in Pihole
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  serial: 1
+  
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block: 
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: update
+      when: vm_folder_name == "WindowsWG"
+
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block:
+        - name: Push custom.list to git and clean up
+          ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: push
+
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: cleanup
+      when: vm_folder_name == "WindowsWG"
+        
+- name: Run post build tasks against new server(s)
+  hosts: temp_group
+  become: true
+  become_method: runas
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    # - ansible.builtin.include_role:
+    #     name: eingram23.homelab.snmpd
+    #     tasks_from: win_snmp
+    #   when: "'snmp' in task"
+
+    - ansible.builtin.include_role:
+        name: eingram23.metrics.windows_exporter
+      when: "'windows_exporter' in task"
+

@@ -1,0 +1,86 @@
+---
+# Requires proj_name set at runtime
+- name: Remove project servers and clean inventory/DNS
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: pull
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: remove
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.inmem_inv
+        tasks_from: linux
+      
+- name: Run pre destroy tasks on host
+  hosts: temp_group
+  gather_facts: true
+  become: true
+  become_method: sudo
+  ignore_unreachable: true
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.rhel_sub
+        tasks_from: remove
+      when: ansible_facts['distribution'] is defined and ansible_facts['distribution'] == 'RedHat'    
+
+- name: Destroy Terraform
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.tf_build.terraform
+        tasks_from: destroy
+
+- name: Remove host(s) from DNS
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  serial: 1
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: update
+
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - name: Push custom.list to git and clean up
+      ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: push
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: cleanup
+

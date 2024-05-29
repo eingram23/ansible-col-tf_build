@@ -1,0 +1,51 @@
+---
+proj_root: "/var/tmp/terraform/projects/"
+
+### MAKE EDITS BELOW ###
+
+# Edit this to change distro
+
+vsphere_template: TMP-Win2022_Packer
+
+# vm_folder_name: Linux
+# vm_folder_name: WindowsWG
+# workgroup: WORKGROUP
+vm_folder_name: WindowsHL
+
+vm_ram: 4096
+vm_cpu: 2
+
+# All lists must have same # of elements
+
+vsphere_datastore_list:
+  - XN_iSCSI_SSD2
+  # - XN_iSCSI_SSD2
+  # - XN_iSCSI_SSD2
+vsphere_network_list:
+  - Lab-LAN1
+  # - Lab-LAN1
+  # - Lab-LAN1
+vm_name_list:
+  - HL-SQL1
+  # - test2
+  # - test3
+ip_address_list:
+  - 10.10.0.18
+  # - 10.10.0.26
+  # - 10.10.0.27
+ip_gateway_list:
+  - 10.10.0.1
+  # - 10.10.0.1
+  # - 10.10.0.1
+dns_suffix_list:
+  - homelab.local
+  # - local.lan
+  # - local.lan
+
+# Uncomment post build tasks to run
+# task:
+#   - container_host
+#   - webapps
+#   - splunk_uf
+  - snmp
+  - windows_exporter

@@ -1,0 +1,103 @@
+---
+# Requires proj_name set at runtime
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: pull
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: addchange
+
+    - name: Import inmem_inv role
+      ansible.builtin.include_role:
+        name: eingram23.homelab.inmem_inv
+        tasks_from: linux
+
+    - name: Import terraform_apply role
+      ansible.builtin.include_role:
+        name: eingram23.tf_build.terraform
+        tasks_from: apply
+
+- name: Deploy new server(s) - run roles against piholes
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  serial: 1
+  
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: update
+
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - name: Push custom.list to git and clean up
+      ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: push
+
+    - ansible.builtin.include_role:
+        name: eingram23.pihole.localdns
+        tasks_from: cleanup
+
+- name: Run post build tasks against new server(s)
+  hosts: temp_group
+  become: true
+  become_method: sudo
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.rhel_sub
+        tasks_from: add
+      when: ansible_facts['distribution'] == 'RedHat'
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.add_eingram_user
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.chrony
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.install_core_pkgs
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.container_host
+      when: "'container_host' in task"
+
+    - ansible.builtin.include_role:
+        name: eingram23.splunk.splunk_uf
+      when: "'splunk_uf' in task"
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.snmpd
+      when: "'snmpd' in task"
+
+    - ansible.builtin.include_role:
+        name: eingram23.metrics.node_exporter
+      when: "'node_exporter' in task"

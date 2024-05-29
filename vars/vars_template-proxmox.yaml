@@ -1,0 +1,50 @@
+---
+proj_root: "/var/tmp/terraform/projects/"
+
+### MAKE EDITS BELOW ###
+
+# Edit this to change distro
+# vsphere_template: TMP-RHEL85_Packer
+proxmox_template: Rocky9-TMP
+# vsphere_template: TMP-Rocky85_Packer
+# vsphere_template: TMP-CentOS_Packer
+# vsphere_template: TMP-Win2022Core_Packer
+# vsphere_template: TMP-Win2016_Packer
+# vsphere_template: TMP-Win2019_Packer
+
+tags: linux
+vm_ram: 4096
+vm_cores: 2
+
+# All lists must have same # of elements
+
+storage: zpool0
+
+vlan: 200
+disk_size: 60G
+vm_name_list:
+  - k3s1
+  - k3s2
+  - k3s3
+ip_address_list:
+  - 10.10.0.51
+  - 10.10.0.52
+  - 10.10.0.53
+ip_gateway_list:
+  - 10.10.0.1
+  - 10.10.0.1
+  - 10.10.0.1
+
+# For any extra vmdks (For Windows, start with ID 2)
+# vm_disks_list: 'vm_disks_list = []'
+# vm_disks_list: 'vm_disks_list = [{ label = "longhorn1", id = 1, size = 60, thin_provisioned = true }]'
+
+# Uncomment post build tasks to run
+task:
+  - none
+  # - container_host
+  # - webapps
+  # - splunk_uf
+  # - snmpd
+  # - node_exporter
+  # - windows_exporter

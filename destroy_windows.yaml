@@ -1,0 +1,85 @@
+---
+- name: Destroy Terraform
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block:
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: pull
+
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: remove
+      when: vm_folder_name == "WindowsWG"
+
+    - ansible.builtin.include_role:
+        name: eingram23.tf_build.terraform
+        tasks_from: destroy
+
+- name: Remove DNS entries from Pihole
+  hosts: piholes
+  gather_facts: false
+  become: true
+  become_method: sudo
+  serial: 1
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block:
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: update
+      when: vm_folder_name == "WindowsWG"
+
+- name: Run localhost roles
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - block:
+        - name: Push custom.list to git and clean up
+          ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: push
+
+        - ansible.builtin.include_role:
+            name: eingram23.pihole.localdns
+            tasks_from: cleanup
+      when: vm_folder_name == "WindowsWG"
+
+- name: Remove computer object from HOMELAB.LOCAL domain
+  hosts: HL-DC1.homelab.local
+  gather_facts: false
+  become: true
+  become_method: runas
+  ignore_unreachable: true
+
+  vars_files:
+    - "{{ playbook_dir }}/vars/vars_{{ proj_name }}.yaml"
+
+  tasks:
+
+    - ansible.builtin.include_role:
+        name: eingram23.homelab.remove_ad_computer
+      vars:
+        ad_computer: "{{ vm_name_list_item }}"
+      loop:
+        - "{{ vm_name_list }}"
+      loop_control:
+        loop_var: vm_name_list_item
+      when: vm_folder_name == "WindowsHL"
