@@ -75,7 +75,7 @@
   tasks:
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.remove_ad_computer
+        name: eingram23.windows.remove_ad_computer
       vars:
         ad_computer: "{{ vm_name_list_item }}"
       loop:

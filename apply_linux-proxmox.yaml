@@ -19,7 +19,7 @@
 
     - name: Import inmem_inv role
       ansible.builtin.include_role:
-        name: eingram23.homelab.inmem_inv
+        name: eingram23.linux.inmem_inv
         tasks_from: linux
 
     - name: Import terraform_apply role
@@ -79,21 +79,21 @@
         password: "{{ lookup('hashi_vault', 'secret=secret/ssh/ansible:ssh_password') }}"
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.rhel_sub
+        name: eingram23.linux.rhel_sub
         tasks_from: add
       when: ansible_facts['distribution'] == 'RedHat'
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.add_eingram_user
+        name: eingram23.linux.add_eingram_user
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.chrony
+        name: eingram23.linux.chrony
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.install_core_pkgs
+        name: eingram23.linux.install_core_pkgs
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.container_host
+        name: eingram23.linux.container_host
       when: "'container_host' in task"
 
     - ansible.builtin.include_role:
@@ -101,7 +101,7 @@
       when: "'splunk_uf' in task"
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.snmpd
+        name: eingram23.linux.snmpd
       when: "'snmpd' in task"
 
     - ansible.builtin.include_role:

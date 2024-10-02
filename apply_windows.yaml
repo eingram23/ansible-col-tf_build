@@ -20,12 +20,12 @@
       when: vm_folder_name == "WindowsWG"
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.inmem_inv
+        name: eingram23.linux.inmem_inv
         tasks_from: WindowsWG
       when: vm_folder_name == "WindowsWG"
 
     - ansible.builtin.include_role:
-        name: eingram23.homelab.inmem_inv
+        name: eingram23.linux.inmem_inv
         tasks_from: WindowsHL
       when: vm_folder_name == "WindowsHL"
 
@@ -83,7 +83,7 @@
   tasks:
 
     # - ansible.builtin.include_role:
-    #     name: eingram23.homelab.snmpd
+    #     name: eingram23.linux.snmpd
     #     tasks_from: win_snmp
     #   when: "'snmp' in task"
 
